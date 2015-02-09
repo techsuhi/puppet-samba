@@ -1,31 +1,52 @@
 class samba::config {
 
-  $workgroup = "UNFORGOTTEN"
-  $serverstring = "ASERVERstring"
-  $security = "user"
-  $backend = 'ldapsam:"ldap://mastermind.unforgotten.de/"'
-  $ldap_ssl = 'start tls'
-  $ldap_admindn = 'cn=samba service,ou=people,ou=serviceaccounts,dc=unforgotten,dc=de'
-  $ldap_adminpw = 'iw%f_cew11!PlvfZm_0=dw'
-  $ldap_suffix = 'dc=unforgotten,dc=de'
-  $ldap_user_suffix = 'ou=people'
-  $ldap_group_suffix = 'ou=group'
-  $ldap_machine_suffix = 'ou=machines'
-  $sid = 'S-1-5-21-4064104595-196718586-568335960'
-
-
-  augeas {
 # will also clear defined shares
 #    'clear-shares':
 #      context => '/files/etc/samba/smb.conf',
 #      changes => [ 'rm target[. != "global"]' ];
 
-    'smb.conf':
+  augeas { 'smb.conf-common':
+    context => '/files/etc/samba/smb.conf',
+    changes => [
+      "set \"target[. = 'global']/workgroup\" '$samba::workgroup'",
+      "set \"target[. = 'global']/server string\" '$samba::serverstring'",
+      "set \"target[. = 'global']/security\" '$samba::security'",
+    ],  
+    require => Package[$::samba::common_packages],
+  }
+
+  if $::samba::winbind {
+    augeas { 'smb.conf-winbind':
       context => '/files/etc/samba/smb.conf',
       changes => [
-        "set \"target[. = 'global']/workgroup\" '$samba::workgroup'",
-        "set \"target[. = 'global']/server string\" '$samba::serverstring'",
-        "set \"target[. = 'global']/security\" '$samba::security'",
+        "set \"target[. = 'global']/winbind enum groups\" '$samba::winbind_enum_groups'",
+        "set \"target[. = 'global']/winbind enum users\" '$samba::winbind_enum_users'",
+        "set \"target[. = 'global']/winbind refresh tickets\" '$samba::winbind_refresh_tickets'",
+        "set \"target[. = 'global']/kerberos method\" '$samba::kerberos_method'",
+        "set \"target[. = 'global']/winbind use default domain\" '$samba::winbind_use_default_domain'",
+        "set \"target[. = 'global']/winbind cache time\" '$samba::winbind_cache_time'",
+        "set \"target[. = 'global']/winbind offline logon\" '$samba::winbind_offline_logon'",
+        "set \"target[. = 'global']/winbind nested groups\" '$samba::winbind_nested_groups'",
+        "set \"target[. = 'global']/winbind expand groups\" '$samba::winbind_expand_groups'",
+        "set \"target[. = 'global']/winbind nss info\" '$samba::winbind_nss_info'",
+        "set \"target[. = 'global']/template shell\" '$samba::template_shell'",
+        "set \"target[. = 'global']/template homedir\" '$samba::template_homedir'",
+        "set \"target[. = 'global']/idmap backend\" '$samba::idmap_backend'",
+        "set \"target[. = 'global']/idmap uid\" '$samba::idmap_uid'",
+        "set \"target[. = 'global']/idmap gid\" '$samba::idmap_gid'",
+        "set \"target[. = 'global']/idmap cache time\" '$samba::idmap_cache_time'",
+        "set \"target[. = 'global']/realm\" '$samba::realm'",
+      ],  
+      require => Package[$::samba::winbind_packages],
+#      notify  => Service[$::samba::winbind_service];
+    }
+
+  }
+
+  if $::samba::ldap {
+    augeas { 'smb.conf-ldap':
+      context => '/files/etc/samba/smb.conf',
+      changes => [
         "set \"target[. = 'global']/passdb backend\" '$samba::backend'",
         "set \"target[. = 'global']/ldap ssl\" '$samba::ldap_ssl'",
         "set \"target[. = 'global']/ldap admin dn\" '$samba::ldap_admindn'",
@@ -34,26 +55,27 @@ class samba::config {
         "set \"target[. = 'global']/ldap group suffix\" '$samba::ldap_group_suffix'",
         "set \"target[. = 'global']/ldap machine suffix\" '$samba::ldap_machine_suffix'",
       ],  
-      require => Package['samba'],
-      notify  => Service['samba'];
-  }
+      require => Package[$::samba::ldap_packages],
+#      notify  => Service[$::samba::ldap_service];
+    }
 
-# missing check if password is already set
-#   if $ldap_adminpw {
-#     exec { 'samba_ldap_passwd':
-#       environment => "PASSWORD=$ldap_adminpw",
-#       command => "smbpasswd -w \$PASSWORD",
-#       require => Augeas['smb.conf'],
-#      notify  => Service['samba'],
-#     }
-#   }
-
-  if $sid {
-    exec { 'samba_set_localsid':
-      command => "net setlocalsid ${sid}",
-      unless  => "net getlocalsid | grep -q ${sid}",
-      require => Package['samba'],
-      notify  => Service['samba'],
+    # missing check if password is already set
+    #   if $ldap_adminpw {
+    #     exec { 'samba_ldap_passwd':
+    #       environment => "PASSWORD=$ldap_adminpw",
+    #       command => "smbpasswd -w \$PASSWORD",
+    #       require => Augeas['smb.conf'],
+    #      notify  => Service['samba'],
+    #     }
+    #   }
+    
+    if $sid {
+      exec { 'samba_set_localsid':
+        command => "net setlocalsid ${sid}",
+        unless  => "net getlocalsid | grep -q ${sid}",
+        require => Package['samba'],
+        notify  => Service['samba'],
+      }
     }
   }
 
