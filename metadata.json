@@ -1,0 +1,14 @@
+{
+  "name": "fonk-samba",
+  "version": "0.1.0",
+  "author": "fonk",
+  "summary": "Module for installing and configuring samba and winbind",
+  "license": "Apache 2.0",
+  "source": "https://github.com/fonk/puppet-samba",
+  "project_page": "https://github.com/fonk/puppet-samba",
+  "issues_url": "https://github.com/fonk/puppet-samba/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+
