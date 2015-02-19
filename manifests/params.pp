@@ -11,6 +11,14 @@ class samba::params {
   # cifs-server parameters
   $cifs = true
 
+  # adjoin parameters
+  $adjoin          = false
+  $adjoin_user     = "changeme"
+  $adjoin_pass     = "changeme"
+  $adjoin_ou       = 'Computers'
+  $kerberos_method = 'system keytab'
+  $realm           = $domain
+
   # ldap parameters
   $ldap = false
   $ldap_ssl = 'off'
@@ -28,7 +36,6 @@ class samba::params {
   $winbind_enum_groups = 'yes'
   $winbind_enum_users =  'yes'
   $winbind_refresh_tickets = 'true'
-  $kerberos_method = 'system keytab'
   $winbind_use_default_domain = 'yes'
   $winbind_cache_time = '300'
   $winbind_offline_logon = 'false'
@@ -41,8 +48,6 @@ class samba::params {
   $idmap_uid = '10000-20000'
   $idmap_gid = '10000-20000'
   $idmap_cache_time = '604800'
-  $realm = $domain
-  $join_ou = 'Computers'
 
   # distribution specific parameters
   case $operatingsystem {

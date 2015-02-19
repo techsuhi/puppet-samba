@@ -10,11 +10,11 @@ class samba (
 
   # adjoin parameters
   $adjoin          = $samba::params::adjoin,
-  $adjoin_ou       = $samba::params::join_ou,
+  $adjoin_user     = $samba::params::adjoin_user,
+  $adjoin_pass     = $samba::params::adjoin_pass,
+  $adjoin_ou       = $samba::params::adjoin_ou,
   $kerberos_method = $samba::params::kerberos_method,
   $realm           = $samba::params::realm,
-  $adjoin_user,
-  $adjoin_pass,
 
   # cifs parameters
   $cifs          = $samba::params::cifs,
