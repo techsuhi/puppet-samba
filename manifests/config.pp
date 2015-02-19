@@ -12,7 +12,17 @@ class samba::config {
       "set \"target[. = 'global']/server string\" '$samba::serverstring'",
       "set \"target[. = 'global']/security\" '$samba::security'",
     ],  
-    require => Package[$::samba::common_packages],
+  }
+
+  if $::samba::adjoin {
+    augeas { 'smb.conf-adjoin':
+      context => '/files/etc/samba/smb.conf',
+      changes => [
+        "set \"target[. = 'global']/kerberos method\" '$samba::kerberos_method'",
+        "set \"target[. = 'global']/realm\" '$samba::realm'",
+      ],  
+    }
+
   }
 
   if $::samba::winbind {
@@ -37,8 +47,6 @@ class samba::config {
         "set \"target[. = 'global']/idmap cache time\" '$samba::idmap_cache_time'",
         "set \"target[. = 'global']/realm\" '$samba::realm'",
       ],  
-      require => Package[$::samba::winbind_packages],
-#      notify  => Service[$::samba::winbind_service];
     }
 
   }
@@ -55,8 +63,6 @@ class samba::config {
         "set \"target[. = 'global']/ldap group suffix\" '$samba::ldap_group_suffix'",
         "set \"target[. = 'global']/ldap machine suffix\" '$samba::ldap_machine_suffix'",
       ],  
-      require => Package[$::samba::ldap_packages],
-#      notify  => Service[$::samba::ldap_service];
     }
 
     # missing check if password is already set
@@ -73,8 +79,6 @@ class samba::config {
       exec { 'samba_set_localsid':
         command => "net setlocalsid ${sid}",
         unless  => "net getlocalsid | grep -q ${sid}",
-        require => Package['samba'],
-        notify  => Service['samba'],
       }
     }
   }

@@ -7,8 +7,6 @@ class samba::service {
       hasrestart => true,
       hasstatus  => true,
       require    => Class['::samba::adjoin']
-#      require    => Package[$::samba::cifs_packages],
-#      subscribe  => Augeas['smb.conf-common'],
     }
   }
 
@@ -19,8 +17,6 @@ class samba::service {
       hasrestart => true,
       hasstatus  => true,
       require    => Class['::samba::adjoin']
-#      require    => Package[$::samba::winbind_packages],
-#      subscribe  => Augeas['smb.conf-common'],
     }
   }
 
