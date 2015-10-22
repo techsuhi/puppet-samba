@@ -4,9 +4,10 @@ class samba::params {
   $package_ensure = 'present'
 
   # common parameters
-  $workgroup = 'SAMBA'
+  $workgroup    = 'SAMBA'
   $serverstring = 'Server %h'
-  $security = 'user'
+  $security     = 'user'
+  $netbiosname  = $::hostname
 
   # cifs-server parameters
   $cifs = true

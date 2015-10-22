@@ -11,6 +11,7 @@ class samba::config {
       "set \"target[. = 'global']/workgroup\" '$samba::workgroup'",
       "set \"target[. = 'global']/server string\" '$samba::serverstring'",
       "set \"target[. = 'global']/security\" '$samba::security'",
+      "set \"target[. = 'global']/netbios name\" '$samba::netbiosname'",
     ],  
   }
 

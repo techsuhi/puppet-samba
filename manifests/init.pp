@@ -4,9 +4,10 @@ class samba (
 
   # common parameters
   $common_packages = $samba::params::common_packages,
-  $workgroup = $samba::params::workgroup,
-  $serverstring = $samba::params::serverstring,
-  $security = $samba::params::security,
+  $workgroup       = $samba::params::workgroup,
+  $serverstring    = $samba::params::serverstring,
+  $security        = $samba::params::security,
+  $netbiosname     = $samba::params::netbiosname,
 
   # adjoin parameters
   $adjoin          = $samba::params::adjoin,
