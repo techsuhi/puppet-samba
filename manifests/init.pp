@@ -59,6 +59,6 @@ class samba (
   class { 'samba::config':  ; } ~>
   class { 'samba::service': ; }
 
-  class { 'samba::adjoin': ; }
+  contain 'samba::adjoin'
 
 }
