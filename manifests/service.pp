@@ -6,7 +6,7 @@ class samba::service {
       enable     => true,
       hasrestart => true,
       hasstatus  => true,
-      require    => Class['::samba::adjoin']
+      require    => Class['::samba::ad']
     }
   }
 
@@ -16,7 +16,7 @@ class samba::service {
       enable     => true,
       hasrestart => true,
       hasstatus  => true,
-      require    => Class['::samba::adjoin']
+      require    => Class['::samba::ad']
     }
   }
 

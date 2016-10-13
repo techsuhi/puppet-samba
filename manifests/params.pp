@@ -12,11 +12,11 @@ class samba::params {
   # cifs-server parameters
   $cifs = true
 
-  # adjoin parameters
-  $adjoin          = false
-  $adjoin_user     = "changeme"
-  $adjoin_pass     = "changeme"
-  $adjoin_ou       = 'Computers'
+  # active directory parameters
+  $ad_mgmt         = "disabled"
+  $ad_user         = "changeme"
+  $ad_pass         = "changeme"
+  $ad_ou           = 'Computers'
   $kerberos_method = 'system keytab'
   $realm           = $domain
 

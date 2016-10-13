@@ -9,11 +9,11 @@ class samba (
   $security        = $samba::params::security,
   $netbiosname     = $samba::params::netbiosname,
 
-  # adjoin parameters
-  $adjoin          = $samba::params::adjoin,
-  $adjoin_user     = $samba::params::adjoin_user,
-  $adjoin_pass     = $samba::params::adjoin_pass,
-  $adjoin_ou       = $samba::params::adjoin_ou,
+  # active directory parameters
+  $ad_mgmt         = $samba::params::ad_mgmt,
+  $ad_user         = $samba::params::ad_user,
+  $ad_pass         = $samba::params::ad_pass,
+  $ad_ou           = $samba::params::ad_ou,
   $kerberos_method = $samba::params::kerberos_method,
   $realm           = $samba::params::realm,
 
@@ -59,6 +59,6 @@ class samba (
   class { 'samba::config':  ; } ~>
   class { 'samba::service': ; }
 
-  contain 'samba::adjoin'
+  contain 'samba::ad'
 
 }

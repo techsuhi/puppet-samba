@@ -15,8 +15,8 @@ class samba::config {
     ],  
   }
 
-  if $::samba::adjoin {
-    augeas { 'smb.conf-adjoin':
+  if $::samba::ad_mgmt != 'disabled' {
+    augeas { 'smb.conf-ad':
       context => '/files/etc/samba/smb.conf',
       changes => [
         "set \"target[. = 'global']/kerberos method\" '$samba::kerberos_method'",
