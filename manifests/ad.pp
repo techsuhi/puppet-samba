@@ -4,8 +4,8 @@ class samba::ad {
     'join': {
       # join domain
       exec { "net_ads_join":
-        environment => "ADS_CREDS=${::samba::adjoin_user}%${::samba::adjoin_pass}",
-        command     => "/usr/bin/net ads join createcomputer=\"${::samba::adjoin_ou}\" -U \$ADS_CREDS",
+        environment => "ADS_CREDS=${::samba::ad_user}%${::samba::ad_pass}",
+        command     => "/usr/bin/net ads join createcomputer=\"${::samba::ad_ou}\" -U \$ADS_CREDS",
         unless      => '/usr/bin/net ads testjoin',
         require     => Class['samba::config'],
       }
@@ -14,7 +14,8 @@ class samba::ad {
     'leave': {
       # leave domain
       exec { "net_ads_leave":
-        command => '/usr/bin/net ads leave',
+        environment => "ADS_CREDS=${::samba::ad_user}%${::samba::ad_pass}",
+        command => "/usr/bin/net ads leave -U \$ADS_CREDS",
         onlyif  => '/usr/bin/net ads testjoin',
         require => Class['samba::config'],
         before  => File['/etc/krb5.keytab'],
@@ -25,7 +26,7 @@ class samba::ad {
         ensure => 'absent',
       }
     }
-    
+
     'disabled': {}
   }
 
